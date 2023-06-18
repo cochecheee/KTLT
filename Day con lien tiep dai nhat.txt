@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+
+using namespace std;
+
+void dynamicprogramming(bool F[][100], string s, int n, int& ans);
+
+int main()
+{
+	//Quy hoach dong: day con doi xung dai nhat
+	string s;
+	getline(cin, s);
+
+	int n = s.size();	//do dai cua chuoi
+
+	//Do dai lon nhat cua day doi xung
+	int ans = 0;
+
+	//F[i][j] voi i la vi tri bat dau cua chuoi con, j la vi tri ket thuc cua chuoi con
+	bool F[100][100];
+	memset(F, 0, sizeof(F));
+
+	//Moi chuoi co do dai = 1 deu doi xung
+	for (int i = 0; i < n; i++)
+		F[i][i] = 1;
+
+	//Kiem tra chuoi doi xung dai nhat
+	dynamicprogramming(F, s, n, ans);
+	cout << ans;
+
+}
+
+void dynamicprogramming(bool F[][100], string s, int n, int& ans) {
+
+	//De biet 1 chuoi co doi xung ko thi phai kiem tra chuoi nho hon co doi xung khong
+	//F[i][j] = F[i+1][j-1] && s[i]==s[j]
+	for (int len = 2; len <= n; len++) {
+		for (int i = 0; i < n-len+1; i++) {
+			F[i][i + len - 1] = F[i + 1][i + len - 2] && s[i] == s[i + len - 1] || s[i] == s[i + len - 1] && len == 2;
+			if (F[i][i + len - 1]) ans = max(ans, len);
+		}
+	}
+}
