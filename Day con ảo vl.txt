@@ -1,0 +1,72 @@
+/*
+Cho trước 1 dãy số, bằng cách lấy ra một số phần tử của dãy này (không nhất thiết liên tục nhưng phải đảm bảo thứ tự trước sau), ta thu được một dãy con. Văn và Thanh là đôi bạn thân của nhau, tuy nhiên hai bạn lại có quan điểm khác nhau về dãy con đẹp. Đối với Văn, dãy con đẹp chính là một dãy mà có kích thước >= 2 và tổng hai số liền kề trong dãy con đó phải là một số đối xứng. Còn Thanh, Thanh lại quan niệm rằng dãy con đẹp chính là dãy con tăng nghiêm ngặt dài nhất.
+Nhiệm vụ của bạn là tìm một dãy con đẹp của dãy đã cho đều thõa mãn hai tiêu chí của Văn và Thanh.
+
+Input Format
+
+Dòng đầu tiên chứa số nguyên dương N là số lượng phần tử của dãy số.
+Dòng tiếp theo chứa N số nguyên dương, mỗi số là mỗi phần tử của dãy số.
+Constraints
+
+1 <= N <= 1000.
+1 <= X <= 1000000, trong đó X là mỗi phần tử của dãy số.
+Output Format
+
+Một số nguyên duy nhất cho biết độ dài của dãy con đẹp tìm được. Nếu không có dãy con nào như thế thì in ra -1.
+*/
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+bool doixung(int n);
+int dp(vector<int> &a, int n);
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    int ans = dp(a,n);
+    cout << ans << endl;
+
+    return 0;
+}
+
+bool doixung(int n) {
+    string s = to_string(n);
+    int left = 0, right = s.length() - 1;
+    while (left < right) {
+        if (s[left] != s[right])
+            return false;
+        left++;
+        right--;
+    }
+    return true;
+}
+
+int dp(vector<int> &a, int n) {
+    
+    vector<int> L(n,1);
+
+    int maxLen = -1;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (a[i] > a[j] && doixung(a[i] + a[j]))
+                L[i] = max(L[i], L[j] + 1);
+        }
+        maxLen = max(maxLen, L[i]);
+    }
+
+    if (maxLen < 2)
+        return -1;
+    else
+        return maxLen;
+}
