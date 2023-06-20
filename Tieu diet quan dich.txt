@@ -1,0 +1,87 @@
+/*
+A là sinh viên ngành CNTT nhưng do học quá tệ, đã rớt rất nhiều môn nên A quyết định về quê chăn bò kiếm sống. A có một khu đất, khu đất nhà A là hình vuông có cạnh là E. Khu đất nhà A sống trước giờ vẫn đang rất bình yên nhưng vào thời kỳ loạn lạc, chiến tranh nổ ra, khu đất nhà A đã bị quân địch chiếm đóng nhằm xây dựng căn cứ. Tuy nhiên, vì đó là mảnh đất lâu đời của A nên A không cam tâm, A quyết định sẽ tiêu diệt quân địch để lấy lại mảnh đất này.
+Nhà của A hiện tại có N khẩu súng pháo, mỗi khẩu súng chỉ còn lại 1 viên đạn duy nhất. Tuy nhiên, vì là sinh viên khoa CNTT nên A không có chút kỹ thuật quân sự nào, A không biết sẽ bắn tại vị trí nào là tối ưu nhất vì thế A chỉ có thể lên một danh sách ngẫu nhiên N vị trí mà A sẽ bắn. Khẩu súng nhà A là một khẩu súng khá dị, khi bắn thì viên đạn pháo không chỉ tiêu diệt tại vị trí đó mà còn nổ ra các vị trí xung quanh, nghĩa là khi bắn một viên đạn pháo khi bắn tại vị trí (x, y) thì sẽ tiêu diệt thêm các quân địch ở các vị trí giống như các vị trí mà quân mã có thể di chuyển trong cờ vua khi đang đứng ở tọa độ (x, y).
+
+Nhiệm vụ của bạn là tính xem với N vị trí bắn đó sẽ tiêu diệt được bao nhiêu quân địch?
+
+Input Format
+
+Dòng đầu tiên chứa số nguyên dương E, K, N. Trong đó E là độ dài cạnh khu đất, K là số lượng quân địch, N là số lượng khẩu súng pháo
+K dòng tiếp theo, mỗi dòng chứa một cặp số (x, y). Trong đó (x, y) là tọa độ của mỗi quân địch
+N dòng tiếp thep, mỗi dòng chứa một cặp số (x, y). Trong đó (x, y) là tọa độ mà bạn A sẽ bắn pháo
+x và y mỗi số cách nhau một khoảng trắng
+Constraints
+
+1 <= E <= 50
+1 <= N, K <= E*E
+1 <= x <= E, 1 <= y <= E
+Output Format
+
+Một số nguyên duy nhất cho biết số lượng quân địch bị tiêu diệt
+
+*/
+
+
+#include <iostream>
+
+using namespace std;
+
+void quanma(int x, int y, int marked[][2507], int &count, int e);
+void xuli(int e, int k, int n, int K[][2], int P[][2], int marked[][2507], int &count);
+
+int main() {
+    //e la do dai canh ban co
+    //k la so luong quan dich
+    //n la so luong phao
+    int e, k, n;
+    cin >> e >> k >> n;
+    
+    int K[2507][2]; //mang luu vi tri dung cua quan dich tren ban co
+    int P[2507][2]; //mang luu vi tri dat phao
+    int marked[2507][2507]; //mang danh dau vi tri dich tren ban co
+    
+    for(int i = 1; i <= k; i++)
+        cin >> K[i][0] >> K[i][1];
+        
+    for(int i = 1; i <= n; i++)
+        cin >> P[i][0] >> P[i][1];
+        
+    for(int i = 1; i <= k; i++)
+        marked[K[i][0]][K[i][1]] = 1;
+        
+    int count = 0;
+    
+    xuli(e,k,n,K,P,marked,count);
+    
+    cout << count;
+    
+}
+
+void quanma(int x, int y, int marked[][2507], int &count, int e)
+{
+    int dx[] = {-1,-2,-2,-1,1,1,2,2};
+    int dy[] = {-2,-1,1,2,2,-2,-1,1};
+    
+    for(int i = 0; i < 8; i++)
+    {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        
+        if(nx >= 0 && nx <= e && ny >= 0 && ny <= e && marked[nx][ny])
+        {
+            count++;
+            marked[nx][ny] = 0; //danh dau da tieu diet
+        }
+    }
+}
+void xuli(int e, int k, int n, int K[][2], int P[][2], int marked[][2507], int &count)
+{
+    for(int i = 1; i <= n; i++)
+    {
+        if(marked[P[i][0]][P[i][1]]) {
+            count++;
+            marked[P[i][0]][P[i][1]] = 0;
+        }
+        quanma(P[i][0],P[i][1],marked,count,e);
+    }
+}
