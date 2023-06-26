@@ -1,0 +1,55 @@
+/*
+	Given an amount and the denominations of coins available, determine how many ways change can be made for amount. There is a limitless supply of each coin type.
+
+Example: n = 3
+c = [8,3,1,2]
+
+There are 3 ways to make change for n = 3:{1,1,1} ,{1,2}, {3}.
+*/
+
+* Dynamic programming
+
+void getWays(int n, vector<long> &c) {
+	//mang dong
+	vector<long> dp(n+1,0);
+	dp[0] = 1;
+
+	for(int i = 0; i < c.size(); i++) {
+		for(int j = c[i]; j <= n; j++) {
+			dp[j] += dp[j-c[i]];
+		}
+
+	}
+
+	return dp[n];
+}
+
+
+//Backtracking
+void backtracking(int n, vector<long>& c, int sum, int& count, int index)
+{
+    // Base case: when sum is equal to n
+    if (sum == n) {
+        count++;
+        return;
+    }
+    else if (sum > n || index == c.size())
+        return;
+
+    // Try including the coin at the current index
+    sum += c[index];
+    backtracking(n, c, sum, count, index);
+    sum -= c[index];
+
+    // Try excluding the coin at the current index
+    backtracking(n, c, sum, count, index + 1);
+}
+
+long getWays(int n, vector<long> c) {
+    int count = 0;
+    int sum = 0;
+
+    backtracking(n, c, sum, count, 0);
+
+    return count;
+}

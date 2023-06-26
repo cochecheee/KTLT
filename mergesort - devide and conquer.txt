@@ -1,0 +1,85 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+void merge(int a[], int left, int mid, int right)
+{
+    int s1 = mid - left + 1;
+    int s2 = right - mid;
+    
+    int arrleft[s1];
+    int arrright[s2];
+    
+    for(int i = 0; i < s1; i++)
+        arrleft[i] = a[left+i];
+    for(int i = 0; i < s2; i++)
+        arrright[i] = a[mid+i+1];
+        
+    int i = 0;
+    int j = 0;
+    int k = left;
+    
+    while (j < s2 && i < s1)
+    {
+        if(arrleft[i] < arrright[j])
+        {
+            a[k] = arrleft[i];
+            i++;
+        }else{
+            a[k] = arrright[j];
+            j++;
+        }
+        k++;
+    }
+    
+    while ( i < s1)
+    {
+        a[k] = arrleft[i];
+        i++;
+        k++;
+    }
+    
+    while ( j < s2)
+    {
+        a[k] = arrright[j];
+        j++;
+        k++;
+    }
+    
+}
+
+void mergeSort(int a[], int left, int right)
+{
+    if(left < right) 
+    {
+        int mid = left + (right-left)/2;
+        
+        mergeSort(a,left,mid);
+        mergeSort(a,mid+1,right);
+        
+        merge(a,left,mid,right);
+    }
+}
+
+int main()
+{
+    int a[] = {4,1,7,10,2,6};
+    int n = sizeof(a)/sizeof(int);
+    
+    mergeSort(a,0,n-1);
+    
+    for(int i = 0; i < n; i++)
+    {
+        cout << a[i] << " ";
+    }
+
+    return 0;
+}
