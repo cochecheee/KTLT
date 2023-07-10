@@ -1,0 +1,970 @@
+1. Tìm một số trong một mảng bằng lính canh.
+
+#include <iostream>
+
+using namespace std;
+
+//tra ve chi so cua vi tri do
+//khong co tra ve -1
+int linhcanh(int a[], int n, int x);
+
+int main()
+{
+    int a[] = {1,2,3,4,5,6,7,8,9};
+    int n = sizeof(a)/sizeof(int);
+    int x; cin>>x;
+    
+    int index = linhcanh(a,n,x);
+    
+    cout << index;
+    
+    return 0;
+}
+
+int linhcanh(int a[], int n, int x)
+{
+    bool flag = true;
+    int i = 0;
+    while(flag&&i<n)
+    {
+        if(a[i] == x)
+            flag = false;
+        i++;
+    }
+    if(flag) return -1;
+    return i-1;
+}
+---------------------------------------------------------
+2. Tìm một số trong một mảng đã có thứ tự (tìm nhị phân).
+#include <iostream>
+
+using namespace std;
+
+//tra ve chi so cua vi tri do
+//khong co tra ve -1
+int binarysearch(int a[], int n, int x);
+
+int main()
+{
+    int a[] = {1,2,3,4,5,6,7,8,9};
+    int n = sizeof(a)/sizeof(int);
+    int x; cin>>x;
+    
+    int index = binarysearch(a,n,x);
+    
+    cout << index;
+    
+    return 0;
+}
+
+int binarysearch(int a[], int n, int x)
+{
+    int left = 0;
+    int right = n - 1;
+    //if(x>a[right] || x < a[left]) return -1;
+    
+    while(left < right)
+    {
+        int mid = left + (right-left)/2;
+        if(a[mid] == x) return mid;
+        if(a[mid] > x) right = mid-1;
+        if(a[mid] < x) left = mid+1;
+    }
+    return -1;
+}
+-------------------------------------------------------
+3. Viết các thủ tục thêm, xóa, sửa, tìm kiếm một phần tử trong một mảng
+* Cách xử lí bằng vector:
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+void add(vector<int> &a, int pos, int val);
+void dlt(vector<int>&a, int pos);
+int bisearch(vector<int>&a, int val);
+
+int main()
+{
+    vector<int> a = {1,2,3,4,5};
+    
+    cout << "Giá trị muốn thêm vào: ";
+    int x; cin >> x;
+    cout << "\nVị trí muốn thêm: ";
+    int pos; cin >> pos;
+    
+    add(a,pos,x);
+    for(int i = 0; i < a.size(); i++)
+        cout << a[i] << " ";
+    cout << endl;
+    
+    cout << "Vị trí muốn xóa: ";
+    cin >> x;
+    dlt(a,x);
+    for(int i = 0; i < a.size(); i++)
+        cout << a[i] << " ";
+    cout << endl;
+    
+    cout << "Giá trị muốn tìm: ";
+    cin >> x;
+    cout << bisearch(a,x);
+}
+
+void add(vector<int>& a, int pos, int val)
+{
+    a.insert(a.begin() + pos, val);
+}
+
+void dlt(vector<int>& a, int pos)
+{
+    if(pos >= a.size() || pos < 0) return;
+    a.erase(a.begin() + pos);
+}
+int bisearch(vector<int>& a, int val)
+{
+    vector<int>::iterator pos;
+    pos = find(a.begin(), a.end(), val);
+
+    if (pos != a.end())
+    {
+        return distance(a.begin(), pos);
+    }
+
+    return -1;
+}
+* Cách xử lí bằng mảng:
+#include <iostream>
+
+using namespace std;
+
+void them(int a[100], int &n, int pos, int val);
+void xoa(int a[100], int &n, int pos);
+int search(int a[100], int n, int val);
+//in
+void print(int a[100], int n)
+{
+    for(int i = 0; i < n; i++)
+        cout << a[i] << " ";
+    cout << "\n";
+}
+
+int main()
+{
+    int a[100];
+    int n;
+    cout << "Nhap so phan tu: ";
+    cin >> n;
+    
+    cout << "Nhap gia tri cua tung phan tu: ";
+    for(int i = 0; i < n; i++)
+        cin >> a[i];
+    
+    //them 1 phan tu
+    cout << "Giá trị muốn thêm vào: ";
+    int x; cin >> x;
+    cout << "Vị trí muốn thêm: ";
+    int pos; cin >> pos;
+    them(a,n,pos,x);
+    print(a,n);
+    
+    //xoa 1 phan tu
+    cout << "Vị trí muốn xóa: ";
+    cin >> x;
+    xoa(a,n,x);
+    print(a,n);
+    
+    //tim kiem 1 phan tu ton tai trong mang
+    cout << "Giá trị muốn tìm: ";
+    cin >> x;
+    cout << search(a,n,x);
+}
+
+void them(int a[100], int &n, int pos, int val)
+{
+    int t = n;
+    while(t != pos)
+    {
+        a[t] = a[t-1];
+        t--;
+    }
+    a[pos] = val;
+    n++;
+}
+
+void xoa(int a[100], int &n, int pos)
+{
+    for(int i = pos; i < n-1; i++)
+        a[i] = a[i+1];
+    n--;
+}
+int search(int a[100], int n, int val)
+{
+    for(int i = 0; i < n; i++)
+        if(a[i] == val) return i;
+        
+    return -1;
+    
+}
+
+-----------------------------------------------------------
+4. Viết hàm chuyển một mảng hai chiều thành một mảng một chiều.
+
+
+#include <iostream>
+
+using namespace std;
+
+void convert(int a[100][100], int arr[], int r, int c)
+{
+    int t = 0;
+    for(int i = 0; i < r; i++)
+        for(int j = 0; j < c; j++)
+            arr[t++] = a[i][j];
+}
+
+void print(int arr[], int size)
+{
+    for(int i = 0; i < size; i++)
+        cout << arr[i] << " ";
+}
+
+int main()
+{
+    int a[100][100];
+    int r, c;
+    cout << "Nhap hang, cot: ";
+    cin >> r >> c;
+    
+    for(int i = 0; i < r; i++)
+        for(int j = 0; j < c; j++)
+            cin >> a[i][j];
+          
+    int arr[1000];
+    int size = r*c;
+    convert(a,arr,r,c);
+    print(arr,size);
+    
+    return 0;
+}
+------------------------------------------------------
+5. Viết hàm chuyển một mảng một chiều có MxN phần tử sang một mảng 2 chiều kích
+thước MxN
+
+#include <iostream>
+
+using namespace std;
+
+void convert(int a[1000], int arr[100][100], int n, int r, int c)
+{
+    int t = 0;
+    
+    while(t < n)
+    {
+        for(int i = 0; i < r; i++)
+            for(int j = 0; j < c; j++)
+                arr[i][j] = a[t++];
+    }
+}
+
+void print(int arr[][100], int r, int c)
+{
+    for(int i = 0; i < r; i++)
+    {
+        for(int j = 0; j < c; j++)
+            cout << arr[i][j] << " ";
+            
+        cout << endl;
+    }
+}
+
+int main()
+{
+    cout << "Số hàng: ";
+    int r; cin>>r;
+    cout << "Số cột: ";
+    int c; cin>>c;
+    
+    int n = r*c;
+    int a[1000];
+    cout << "Nhập phần tử của mảng 1 chiều: ";
+    for(int i = 0; i < n; i++)
+        cin>>a[i];
+    
+    int arr[100][100];
+    convert(a,arr,n,r,c);
+    
+    print(arr,r,c);
+    return 0;
+}
+
+---------------------------------------------------------------------------------------
+6. Thực hiện ghép 2 mảng một chiều A, B để tạo mảng C theo nguyên tắc từng phần
+tử của mảng A xen kẻ từng phần tử của mảng B
+
+#include <iostream>
+
+using namespace std;
+
+void xenke(int a[100], int b[100], int c[1000], int n, int m);
+void nhap(int a[100], int n)
+{
+    for(int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+    }
+}
+
+void print(int a[1000], int n)
+{
+    for(int i = 0; i < n; i++)
+        cout << a[i] << " ";
+}
+
+int main()
+{
+    int n, m;
+    cout << "Nhap lan luot so phan tu mang a, b: ";
+    cin >> n >> m;
+    
+    int a[100];
+    int b[100];
+    nhap(a,n);
+    nhap(b,m);
+    
+    int c[1000];
+    xenke(a,b,c,n,m);
+    print(c,n+m);
+    
+    return 0;
+}
+
+void xenke(int a[100], int b[100], int c[1000], int n, int m)
+{
+    int i1 = 0, i2 = 0;
+    int t = 0;
+    
+    while(i1<n && i2<m)
+    {
+        c[t++] = a[i1++];
+        c[t++] = b[i2++];
+    }
+    
+    while(i1<n)
+        c[t++] = a[i1++];
+    
+    while(i2<m)
+        c[t++] = b[i2++];
+    
+}
+-----------------------------------------------------------------------------------
+7. Thực hiện xóa bỏ khoảng trắng thừa và viết hoa đầu từ một chuỗi ký tự cho trước.
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void chuanhoa(string& s);
+
+int main()
+{
+    string s;
+    cout << "Nhap chuoi: ";
+    getline(cin,s);
+    
+    chuanhoa(s);
+    
+    cout << s;
+    
+    return 0;
+}
+
+void chuanhoa(string& s)
+{
+    int n = s.size();
+    
+    //xoa khoang trang dau 
+    while(s[0] == ' ')
+    {
+        s.erase(0,1);
+        n--;
+    }
+    s[0] = toupper(s[0]);
+    
+    //xoa khoang trang cuoi 
+    while(s[n-1] == ' ')
+    {
+        s.pop_back();
+        n--;
+    }
+    
+    int t = s.find("  ");
+    while(t != string::npos)
+    {
+        s.replace(t,2," ");
+        t = s.find("  ");
+    }
+}
+------------------------------------------------------------------------------------------
+8. Cho ma trận A kích thước MxN (0<M,N<100) chứa các số thực nhỏ hơn 100000.
+Một điểm Xi,j được gọi là điểm lồi nếu như nó lớn hơn cả 4 điểm trên, dưới, trái,
+phải của nó.
+Yêu cầu: Tìm Xmin là điểm lồi có giá trị nhỏ nhất của mảng.
+Dữ liệu vào: Được nhập từ bàn phím có cấu trúc như sau:
++ Dòng đầu tiên là hai số nguyên dương M, N biểu diễn kích thước của ma trận
+A (M dòng, N cột).
++ M dòng tiếp theo, mỗi dòng là N số thực (mỗi số cách nhau ít nhất một khoảng
+trắng) lần lượt là N phần tử của từng dòng tương ứng của ma trận.
+Dữ liệu ra: Xuất ra màn hình một dòng duy nhất gồm 2 số nguyên I, J lần lượt
+là chỉ số dòng và cột của Xmin đầu tiên từ trên xuống và từ trái qua phải. Nếu
+không có điểm lồi nào thì xuất ra là -1.
+Ví dụ:
+Dữ liệu vào 				Dữ liệu ra
+3 4 					1 2
+3 9 5 6
+4 6 8 7
+8 11 7 10
+*********
+#include <iostream>
+
+using namespace std;
+
+#define MAX 100000
+
+bool check(int a[100][100], int i, int j, int n, int m);
+
+int main()
+{
+	int m, n;
+	cout << "Nhap lan luot so sdong, cot: ";
+	cin >> m >> n;
+	
+	int a[100][100];
+	cout << "Nhap gia tri cua mang 2 chieu: ";
+	for(int i = 0; i < m; i++)
+		for(int j = 0; j < n; j++)
+			cin >> a[i][j];
+	
+	int min = MAX;
+	int rm = -1;
+	int cm = -1;
+	for(int i = 0; i < m; i++)
+	{
+		for(int j = 0; j < n; j++)
+		{
+			if(check(a,i,j,m,n) && min > a[i][j])
+			{
+				min = a[i][j];
+				rm = i;
+				cm = j;
+			}
+		}
+	}
+	
+	if(rm == -1) cout << -1;
+	else cout << rm << " " << cm;
+	return 0;
+}
+
+bool check(int a[100][100], int i, int j, int n, int m)
+{
+	int dx[] = {-1,0,0,1};
+	int dy[] = {0,-1,1,0};
+	
+	for(int x = 0; x < 4; x++)
+	{
+		if(dx[x]+i<0 || dy[x]+j<0 || dx[x]+i>=n || dy[x]+j>=m)
+			continue;
+		int r = dx[x]+i;
+		int c = dy[x]+j;
+		if(a[i][j] <= a[r][c]) return false;
+	}
+	
+	return true;
+}
+----------------------------------------------------------------------------
+9. Nhập vào một số dạng thập phân, chuyển sang dạng nhị phân, bát phân, thập lục
+phân.
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+string binary(int n);
+string octal(int n);
+string hexadec(int n);
+
+int main()
+{
+    int n;
+    cin >> n;
+    
+    string s1 = binary(n);
+    cout << s1 << endl;
+    
+    string s2 = octal(n);
+    cout << s2 << endl;
+    
+    string s3 = hexadec(n);
+    cout << s3 << endl;
+}
+
+string hexadec(int n)
+{
+    char c[]={'0','1','2','3','4','5','6','7','8','9','A','B',
+            'C','D','E','F'};
+            
+    string s = "";
+    
+    while(n!=0)
+    {
+        int x = n%16;
+        s = s+c[x];
+        n=n/16;
+    }
+    reverse(s.begin(),s.end());
+    
+    return s;
+}
+
+string octal(int n)
+{
+    string s = "";
+    
+    while(n!=0)
+    {
+        s += to_string(n%8);
+        n=n/8;
+    }
+    reverse(s.begin(), s.end());
+    
+    return s;
+}
+
+string binary(int n)
+{
+    string s = "";
+    
+    while(n!=0)
+    {
+        s += to_string(n%2);
+        n=n/2;
+    }
+    reverse(s.begin(), s.end());
+    
+    return s;
+}
+---------------------------------------------------------------------------------
+10. Nhập vào d, m, y, kiểm tra (d,m,y) có lập thành một ngày tháng năm hay không, nếu
+có xuất ra ngày tiếp theo.
+
+---------------------------------------------------------------------------------
+11. Tính tổng, hiệu 2 số nguyên lớn.
+Hướng dẫn:
+- Sử dụng kiểu dữ liệu chuỗi (mảng ký tự) cho từng số nguyên.
+- Làm bài tính tổng trước, làm được mới tính hiệu, xử lý từng trường hợp 2 số có độ dài bằng nhau, độ dài khác nhau…
+---------------------------------------------------------------------------------
+12. Lập ma trận giá trị bãi mìn cho trò chơi Minesweeper
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+void datmin(int a[100][100], int n, int mines);
+int count(int a[100][100], int n, int i, int j);
+void countmines(int a[100][100], int n);
+void print(int a[][100], int n);
+
+int main()
+{
+    int n;
+    cout << "Nhap kich co cua bai min: ";
+    cin >> n;
+
+    int mines;
+    cout << "Nhap so min can rai: ";
+    cin >> mines;
+
+    int a[100][100];
+    datmin(a, n, mines);
+    print(a, n);
+
+    cout << endl;
+
+    countmines(a, n);
+    print(a, n);
+
+    return 0;
+}
+
+void print(int a[][100], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+            cout << a[i][j] << " ";
+
+        cout << endl;
+    }
+}
+
+void countmines(int a[100][100], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (a[i][j] != -1)
+                a[i][j] = count(a, n, i, j);
+        }
+    }
+}
+
+int count(int a[100][100], int n, int i, int j)
+{
+    int c = 0;
+    for (int x = i - 1; x <= i + 1; x++)
+    {
+        if (x < 0 || x >= n)
+            continue;
+        for (int y = j - 1; y <= j + 1; y++)
+        {
+            if (y < 0 || y >= n)
+                continue;
+            if (a[x][y] == -1)
+                c++;
+        }
+    }
+    return c;
+}
+
+void datmin(int a[100][100], int n, int mines)
+{
+    srand(time(NULL));
+
+    int t = 0;
+    while (t < mines)
+    {
+        int i = rand() % n;
+        int j = rand() % n;
+        a[i][j] = -1;
+        t++;
+    }
+}
+----------------------------------------------------------------------
+13. Cho các số 1, 2, 3, 4, 5 và tổng S ban đầu bằng 0. Có 2 người chơi lần lượt chọn một trong các số đã cho theo nguyên tắc không được số mà người kia vừa chọn trước đó, mỗi lần ai chọn đều cộng dồn vào tổng S.
+Ví dụ: Ban đầu người A chọn 2 vậy S=0+2=2.
+Tiếp theo người B chỉ được chọn 1, 3, 4, 5 (không được chọn 2), ví dụ chọn 4, vậy S=2+4=6. Tiếp theo A chỉ được chọn 1, 2, 3, 5 (được chọn lại 2 nhưng không được chọn 4), ví dụ chọn 5. Vậy S=6+5=11.
+Tiếp theo B chỉ được chọn 1, 2, 3, 4 (không được chọn 5 vì A mới vừa chọn 5), ví dụ chọn 2. Vậy S=11+2=13….
+Ai làm cho tổng S lớn hơn 35 là thua. Lập trình cho người chơi với máy sao cho khả năng thắng của máy là cao nhất.
+Hướng dẫn: Trò chơi được giải quyết bằng phương pháp Lập bảng phương án
+
+---------------------------------------------------------------------------------
+14. Viết chương trình in ra các số nguyên từ 1 đến N2 theo hình xoắn ốc với N được
+nhập vào từ bàn phím. Ví dụ, với N=4 ta có:
+1 2 3 4
+12 13 14 5
+11 16 15 6
+10 9 8 7
+
+#include <iostream>
+
+using namespace std;
+
+void xoanoc(int a[100][100], int n);
+void print(int a[100][100], int n);
+
+int main()
+{
+    int n;
+    cin >> n;
+    int a[100][100];
+    
+    xoanoc(a,n);
+    print(a,n);
+    return 0;
+}
+
+void xoanoc(int a[100][100], int n)
+{
+    int x1, y1, x2, y2;
+    x1 = 0; x2 = n-1;
+    y1 = 0; y2 = n-1;
+    
+    while( (n%2==0 && x1<x2) || (n%2==1 && x1<=x2) )
+    {
+        //ngang tren y1 -> y2
+        for(int i = y1; i <= y2; i++)
+            cin >> a[x1][i];
+        x1++;
+        //doc phai x1 -> x2
+        for(int i = x1; i <= x2; i++)
+            cin >> a[i][y2];
+        y2--;
+        //ngang duoiw y2 -> y1
+        for(int i = y2; i>=y1; i--)
+            cin >> a[x2][i];
+        x2--;
+        //doc trai x2->x1;
+        for(int i = x2; i >= x1; i--)
+            cin >> a[i][y1];
+        y1++;
+    }
+}
+
+void print(int a[100][100], int n)
+{
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+----------------------------------------------------------------------------
+15. (Ma trận kỳ ảo – Ma phương) Viết chương trình nhập vào số tự nhiên N (N lẻ),sau đó điền các số từ 1 đến n^2 vào trong một bảng vuông sao cho tổng các hàng ngang, hàng dọc và 2 đường chéo đều bằng nhau.
+Hướng dẫn: Một trong nhiều cách giải là như bên dưới
+				5				
+			4		10			
+		3		9		15		
+	2		8		14		20	
+1		7		12		19		25
+	6		12		18		24	
+		11		17		23		
+			16		22			
+				21				
+- Result:
+				5				
+			4		10			
+		3	16	9	22	15		
+	2	20	8	21	14	2	20	
+1		7	25	12	1	19		25
+	6	24	12	5	18	6	24	
+		11	4	17	10	23		
+			16		22			
+				21		
+
+/*****************************************************************************
+*******************************************************************************/
+* Tự nghĩ
+#include <iostream>
+
+using namespace std;
+
+int tinhsize(int n)
+{
+    int b = 0;
+    int t = n;
+    while (n > 2)
+    {
+        n = n - 2;
+        b++;
+    }
+    
+    return t+b*2;
+}
+void dienso(int a[100][100], int size, int n);
+void xuli(int a[100][100], int size, int n, int res[100][100]);
+void print(int a[100][100], int size)
+{
+    for(int i = 0; i < size; i++)
+    {
+        for(int j = 0; j < size; j++)
+        {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    //tinh toan kich co cua mang
+    int size = tinhsize(n);
+    //cout << size;
+    
+    //dien so vao mang
+    int a[100][100];
+    dienso(a,size,n);
+    
+    //mang da xu li 
+    int res[100][100];
+    xuli(a,size,n,res);
+    print(res,n);
+
+    return 0;
+}
+
+void dienso(int a[100][100], int size, int n)
+{
+    int r = size/2;
+    int c = 0;
+    int target = n*n;
+    int t = 1;
+    
+    while(t <= target)
+    {
+        for(int i = 0; i < n; i++)
+        {
+            a[r-i][c+i] = t;
+            t++;
+        }
+        r++; c++;
+    }
+}
+
+void xuli(int a[100][100], int size, int n, int res[100][100])
+{
+    //hang ngang
+    int t = (size-n)/2;
+    
+    //trai
+    for(int i = 0; i < size; i++)
+    {
+        for(int j = 0; j < t; j++)
+        {
+            if(a[i][j] != 0)
+                a[i][j+n] = a[i][j];
+        }
+    }
+    //phai
+    for(int i = 0; i < size; i++)
+    {
+        for(int j = 0; j < t; j++)
+        {
+            if(a[i][size-1-j] != 0)
+                a[i][size-1-j-n] = a[i][size-1-j];
+        }
+    }
+    //tren
+    for(int j = 0; j < size; j++)
+    {
+        for(int i = 0; i < t; i++)
+        {
+            if(a[i][j] != 0)
+                a[i+n][j] = a[i][size-1-j];
+        }
+    }
+    //duoi
+    for(int j = 0; j < size; j++)
+    {
+        for(int i = 0; i < t; i++)
+        {
+            if(a[size-1-i][j] != 0)
+                a[size-1-i-n][j] = a[size-1-i][j];
+        }
+    }
+    
+    //update res
+    int r = 0;
+    int c;
+    for(int i = 0+t; i < n + t; i++)
+    {
+        c = 0;
+        for(int j = 0+t; j < n+t; j++)
+        {
+            res[r][c] = a[i][j];
+            c++;
+        }
+        r++;
+    }
+
+}
+
+*Lên mạng tìm
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<vector<int>> generateMagicSquare(int n) {
+    vector<vector<int>> magicSquare(n, vector<int>(n, 0));
+
+    int i = n / 2;
+    int j = n - 1;
+
+    int num = 1;
+    while (num <= n * n) {
+        if (i == -1 && j == n) {
+            i = 0;
+            j = n - 2;
+        }
+        else {
+            if (i < 0)
+                i = n - 1;
+            if (j == n)
+                j = 0;
+        }
+
+        if (magicSquare[i][j] != 0) {
+            i += 1;
+            j -= 2;
+            continue;
+        }
+
+        magicSquare[i][j] = num;
+        num += 1;
+        i -= 1;
+        j += 1;
+    }
+
+    return magicSquare;
+}
+
+void printMagicSquare(const vector<vector<int>>& magicSquare) {
+    int n = magicSquare.size();
+    int totalSum = 0;
+
+    for (int j = 0; j < n; j++)
+        totalSum += magicSquare[0][j];
+
+    for (int i = 0; i < n; i++) {
+        int rowSum = 0;
+        for (int j = 0; j < n; j++) {
+            rowSum += magicSquare[i][j];
+            cout << magicSquare[i][j] << "\t";
+        }
+
+        if (rowSum != totalSum) {
+            cout << "Ma trận không hợp lệ." << endl;
+            return;
+        }
+
+        cout << endl;
+    }
+
+    cout << "Tổng hàng, cột và đường chéo: " << totalSum << endl;
+}
+
+int main() {
+    int N;
+    cout << "Nhập số tự nhiên lẻ N: ";
+    cin >> N;
+
+    if (N % 2 == 0) {
+        cout << "N phải là số tự nhiên lẻ." << endl;
+    }
+    else {
+        vector<vector<int>> magicSquare = generateMagicSquare(N);
+        cout << "\nMa trận kỳ ảo:" << endl;
+        printMagicSquare(magicSquare);
+    }
+
+    return 0;
+}
+		
+---------------------------------------------------------------------
+16. (Bài toán dồn sỏi). Cho k và n là 2 số nguyên dương, có 2^k viên sỏi, được phân bố trong n đống. Người ta cần san sẻ lượng sỏi từ các đống để dồn sỏi trở về một đống. Quy tắc san sỏi như sau: mỗi lần san áp dụng cho hai đống sỏi, giả sử rằng một đống có a viên sỏi và còn đống kia có b viên sỏi (không giảm tổng quát, giả thiết a, b) thì cho phép san (thay đổi số lượng từ hai đống) như sau:
+Đống a viên (đống có số sỏi không thua đống còn lại) sẽ là a - b viên, còn đống b trở thành 2*b viên.
+Hãy tìm cách san sỏi để cuối cùng còn 1 đống sỏi với 2^k viên.
+
+
+
